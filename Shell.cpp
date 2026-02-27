@@ -6,6 +6,9 @@
 #include "commands/MkdirCommand.h"
 #include "commands/RmCommand.h"
 #include "commands/EchoCommand.h"
+#include "commands/CatCommand.h"
+#include "commands/CpCommand.h"
+#include "commands/MvCommand.h"
 #include <iostream>
 #include <string>
 #include <windows.h>   // Task 4.1: SetConsoleOutputCP
@@ -31,6 +34,9 @@ Shell::Shell() {
     registry_.registerCommand("mkdir", new MkdirCommand());
     registry_.registerCommand("rm",    new RmCommand());
     registry_.registerCommand("echo",  new EchoCommand());
+    registry_.registerCommand("cat",   new CatCommand());
+    registry_.registerCommand("cp",    new CpCommand());
+    registry_.registerCommand("mv",    new MvCommand());
 }
 
 // Task 3.3 + 3.4 + 3.5: 主循环实现

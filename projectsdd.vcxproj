@@ -154,6 +154,9 @@
     <ClCompile Include="commands\MkdirCommand.cpp" />
     <ClCompile Include="commands\RmCommand.cpp" />
     <ClCompile Include="commands\EchoCommand.cpp" />
+    <ClCompile Include="commands\CatCommand.cpp" />
+    <ClCompile Include="commands\CpCommand.cpp" />
+    <ClCompile Include="commands\MvCommand.cpp" />
     <ClCompile Include="CommandRegistry.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Shell.cpp" />
@@ -168,6 +171,9 @@
     <ClInclude Include="commands\MkdirCommand.h" />
     <ClInclude Include="commands\RmCommand.h" />
     <ClInclude Include="commands\EchoCommand.h" />
+    <ClInclude Include="commands\CatCommand.h" />
+    <ClInclude Include="commands\CpCommand.h" />
+    <ClInclude Include="commands\MvCommand.h" />
     <ClInclude Include="Shell.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
