@@ -1,0 +1,77 @@
+schema: spec-driven
+
+# ============================================================
+# Project Context
+# 每次 AI 执行 opsx: 指令时都会读取此段，用于理解项目背景。
+# ============================================================
+context: |
+  ## 项目简介
+  这是一个 Unix-to-Windows 命令模拟器（教学 / 练习项目）。
+  目标是让用户在 Windows 终端中输入 Unix 风格命令（如 ls、pwd、cd），
+  程序负责将其转换为对应的 Windows API 或 CMD 调用并输出结果。
+
+  ## 技术栈
+  - 语言：C++17
+  - 编译器 / IDE：MSVC (Visual Studio 2019), x64 Debug
+  - 平台：Windows 10/11
+
+  ## 架构约定（已在 oop-refactor 中建立）
+  - 采用 Command Pattern：每个 Unix 命令对应一个继承自 CommandHandler 的子类
+  - 采用 Registry Pattern：Shell 通过 CommandRegistry 注册和分发命令
+  - 新增命令时只需在 commands/ 目录下新建 XxxCommand.h / .cpp，
+    并在 Shell.cpp 的构造函数中 registerCommand，无需修改核心逻辑
+  - 头文件放项目根目录或 commands/ 目录，实现文件放对应目录
+
+  ## 编码约定
+  - 源文件保存为 UTF-8 with BOM（避免 MSVC C4819 警告）
+  - 构造函数中调用 SetConsoleOutputCP(65001) 以支持中文输出
+  - 注释和日志可以用中文
+
+  ## 命令映射方向
+  Unix 命令 → Windows 实现（优先使用 Windows API，其次 std::filesystem）
+  参考映射表（可在后续 Change 中扩展）：
+    ls      → FindFirstFile / std::filesystem::directory_iterator
+    pwd     → GetCurrentDirectory / std::filesystem::current_path
+    cd      → SetCurrentDirectory / std::filesystem::current_path
+    mkdir   → CreateDirectory / std::filesystem::create_directory
+    rm      → DeleteFile / std::filesystem::remove
+    cp      → CopyFile
+    mv      → MoveFile
+    cat     → 读文件流逐行输出
+    echo    → std::cout
+
+  ## 已完成的 Changes
+  - oop-refactor：将单文件 main.cpp 重构为多文件 OOP 架构（已归档）
+  - basic-unix-commands：新增 pwd/cd/mkdir/rm/echo 五个基础命令（已归档）
+    - 额外修复：/utf-8 编译选项 + ENABLE_VIRTUAL_TERMINAL_PROCESSING 解决 VS 调试控制台中文乱码
+
+  ## 规划中的 Changes
+  - advanced-unix-commands：实现 cp、mv、cat 等涉及文件内容读写的命令
+
+# ============================================================
+# Per-Artifact Rules
+# 约束 AI 在生成各类制品时的格式和边界。
+# ============================================================
+rules:
+  proposal:
+    - 必须包含 "Non-goals" 段，明确声明本次变更不涉及的内容，防止 scope creep
+    - 控制在 400 字以内，聚焦 WHY 和能力边界，不要写实现细节
+    - 使用中文撰写
+
+  specs:
+    - 使用 SHALL / MUST 语言描述需求（SHALL=强制，SHOULD=建议）
+    - 每个 Capability 下至少包含 2 个 Scenario（正常路径 + 异常路径）
+    - 每个命令对应独立的 Capability，不允许将多个命令合并到一个 Capability
+    - Scenario 描述要足够具体，让 AI 可以直接据此写单元测试
+    - 使用中文撰写
+
+  design:
+    - 必须包含"关键决策"段，说明选型理由和被放弃的替代方案
+    - 列出新增/修改的文件清单
+    - 使用中文撰写
+
+  tasks:
+    - 每个 task 对应且仅对应一个文件的变更（一个 .cpp 或 .h）
+    - task 描述要包含"做什么"和"验证方式"两部分
+    - 必须有 Verify 步骤，且每个 Verify 步骤对应 specs 中的具体 Scenario
+    - 使用中文撰写
